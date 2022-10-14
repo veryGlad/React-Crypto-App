@@ -1,8 +1,12 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import cryptoCurrenciesReducer from './components/CryptoCurrencies/cryptoCurrenciesSlice';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import cryptoCurrencyPageReducer from './components/CryptoCurrencyPage/cryptoCurrencyPageSlice';
 
-const rootReducer = combineReducers({ cryptoCurrenciesReducer });
+const rootReducer = combineReducers({
+  cryptoCurrenciesReducer,
+  cryptoCurrencyPageReducer,
+});
 
 const store = configureStore({
   reducer: rootReducer,
