@@ -61,6 +61,17 @@ export const fetchCryptoCurrencies = createAsyncThunk(
 
 export interface IGlobalCurrencyData {
   active_cryptocurrencies: number;
+  total_market_cap: totalMarketCap;
+  market_cap_percentage: marketCapPercentage;
+  market_cap_change_percentage_24h_usd: number;
+}
+
+export interface totalMarketCap {
+  usd: number;
+}
+
+export interface marketCapPercentage {
+  btc: number;
 }
 
 export const fetchGlobalCurrencyData = createAsyncThunk(

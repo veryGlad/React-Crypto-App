@@ -21,6 +21,9 @@ import {
 import './currenciesTable.scss';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
+import { styled } from '@mui/material/styles';
 
 const million = 1_000_000;
 const billion = 1_000_000_000;
@@ -33,14 +36,13 @@ const CurrenciesTable = () => {
     dispatch(fetchGlobalCurrencyData());
   }, [dispatch]);
 
-  const { fetchStatus, cryptoCurrencies, currenciesCount } = useAppSelector(
+  const { fetchStatus, cryptoCurrencies, globalCurrencyData } = useAppSelector(
     (state) => {
+      console.log(state.cryptoCurrenciesReducer.globalCurrencyData);
       return {
         cryptoCurrencies: state.cryptoCurrenciesReducer.data,
         fetchStatus: state.cryptoCurrenciesReducer.loadingCryptocurrencies,
-        currenciesCount:
-          state.cryptoCurrenciesReducer.globalCurrencyData
-            ?.active_cryptocurrencies,
+        globalCurrencyData: state.cryptoCurrenciesReducer.globalCurrencyData,
       };
     }
   );
@@ -56,8 +58,9 @@ const CurrenciesTable = () => {
   };
 
   const pagesQuantity = React.useMemo(
-    (): number => Math.ceil(Number(currenciesCount) / 100),
-    [currenciesCount]
+    (): number =>
+      Math.ceil(Number(globalCurrencyData?.active_cryptocurrencies) / 100),
+    [globalCurrencyData]
   );
 
   const handlePageChange = React.useCallback(
@@ -69,9 +72,31 @@ const CurrenciesTable = () => {
     [dispatch]
   );
 
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.primary,
+  }));
+
   return (
     <Container maxWidth={'lg'}>
-      <Box marginTop={4}>
+      <Box marginTop={2}>
+        <div>
+          <Stack
+            direction="row"
+            divider={<Divider orientation="vertical" flexItem />}
+            spacing={2}
+            width={'100%'}
+          >
+            <Item>{globalCurrencyData?.total_market_cap.usd}</Item>
+            <Item>Item 2</Item>
+            <Item>Item 3</Item>
+          </Stack>
+        </div>
+      </Box>
+      <Box marginTop={2}>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -122,7 +147,6 @@ const CurrenciesTable = () => {
                                 alt={`${currency.name}-logo`}
                               />
                             </Box>
-
                             {currency.name}
                           </Box>
                         </Link>

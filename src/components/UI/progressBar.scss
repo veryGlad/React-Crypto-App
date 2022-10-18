@@ -1,0 +1,10 @@
+.progressBar.MuiLinearProgress-root {
+  height: 16px ;
+  border-radius: 8px;
+  background: linear-gradient(90deg, rgba(117,0,0,0.6475183823529411) 0%, rgba(166,36,0,0.3029805672268907) 50%, rgba(0,157,28,0.8183867296918768) 100%);
+}
+
+.MuiLinearProgress-root > .MuiLinearProgress-bar {
+  background: linear-gradient(90deg, rgba(117,0,0,0) 0%, rgba(174,105,105,0) 50%, rgba(255,255,255,0.4) 100%);
+}
+

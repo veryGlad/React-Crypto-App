@@ -3,12 +3,13 @@ import { useAppDispatch, useAppSelector } from '../../store';
 import { fetchCryptoCurrencyInfo } from './cryptoCurrencyPageSlice';
 import { useParams } from 'react-router-dom';
 import Container from '@mui/material/Container';
-import { Divider, LinearProgress, Stack } from '@mui/material';
+import { Divider } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
+import LinearWithValueLabel from '../UI/ProgressBar';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -34,6 +35,20 @@ const CryptoCurrencyPage = () => {
       currencyInfo: state.cryptoCurrencyPageReducer.data,
     };
   });
+
+  const currentPriceBy24MinMaxPercent = React.useMemo((): number | null => {
+    if (currencyInfo) {
+      return (
+        (100 *
+          (currencyInfo.market_data.current_price.usd -
+            currencyInfo.market_data.low_24h.usd)) /
+        (currencyInfo.market_data.high_24h.usd -
+          currencyInfo.market_data.low_24h.usd)
+      );
+    } else {
+      return null;
+    }
+  }, [currencyInfo]);
 
   const is24hChangePositive = React.useMemo(
     (): boolean =>
@@ -89,8 +104,15 @@ const CryptoCurrencyPage = () => {
               </Box>
             </Item>
           </Grid>
-          <Grid xs={6}>
-            <Item>2</Item>
+          <Grid xs={6} alignSelf={'flex-end'}>
+            <Item>
+              <Box paddingTop={6} paddingBottom={4}>
+                <LinearWithValueLabel
+                  classes={{ root: 'progressBar' }}
+                  value={Number(currentPriceBy24MinMaxPercent)}
+                />
+              </Box>
+            </Item>
           </Grid>
           <Grid xs={6}>
             <Item>
