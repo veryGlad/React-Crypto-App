@@ -89,10 +89,53 @@ const CurrenciesTable = () => {
             divider={<Divider orientation="vertical" flexItem />}
             spacing={2}
             width={'100%'}
+            justifyContent={'center'}
           >
-            <Item>{globalCurrencyData?.total_market_cap.usd}</Item>
-            <Item>Item 2</Item>
-            <Item>Item 3</Item>
+            <Item>
+              <Box display={'flex'}>
+                <Typography color={'lightslategrey'}>
+                  Crypto market capitalization
+                </Typography>
+                <Typography marginLeft={1} fontWeight={'bold'}>
+                  $
+                  {getMarketCap(
+                    globalCurrencyData?.total_market_cap.usd as number
+                  )}
+                </Typography>
+              </Box>
+            </Item>
+            <Item>
+              <Box display={'flex'}>
+                <Typography color={'lightslategrey'}>
+                  Crypto market capitalization 24h change
+                </Typography>
+                <Typography
+                  marginLeft={1}
+                  fontWeight={'bold'}
+                  color={
+                    globalCurrencyData &&
+                    globalCurrencyData?.market_cap_change_percentage_24h_usd > 0
+                      ? '#73e373'
+                      : '#f76161'
+                  }
+                >
+                  {globalCurrencyData?.market_cap_change_percentage_24h_usd.toFixed(
+                    2
+                  )}
+                  %
+                </Typography>
+              </Box>
+            </Item>
+            <Item>
+              <Box display={'flex'}>
+                <Typography color={'lightslategrey'}>
+                  Bitcoin domination
+                </Typography>
+                <Typography marginLeft={1} fontWeight={'bold'}>
+                  {globalCurrencyData?.market_cap_percentage.btc.toFixed(2)}%
+                </Typography>
+              </Box>
+            </Item>
           </Stack>
         </div>
       </Box>
@@ -157,8 +200,8 @@ const CurrenciesTable = () => {
                         <Typography
                           color={
                             currency.price_change_percentage_24h > 0
-                              ? 'green'
-                              : 'red'
+                              ? '#73e373'
+                              : '#f76161'
                           }
                         >
                           {currency.price_change_percentage_24h?.toFixed(2)} %
