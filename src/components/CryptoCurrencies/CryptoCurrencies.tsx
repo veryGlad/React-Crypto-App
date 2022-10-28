@@ -1,5 +1,5 @@
 import React from 'react';
-import CurrenciesTable from './CurrenciesTable';
+import CurrenciesTable from './CurrenciesTable/CurrenciesTable';
 
 const CryptoCurrencies = () => {
   return (

@@ -1,10 +1,10 @@
 import React from 'react';
 import './App.css';
-import Header from './components/Header';
+import Header from './components/Header/Header';
 import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
 import CryptoCurrencies from './components/CryptoCurrencies/CryptoCurrencies';
-import Portfolio from './components/Portfolio/Portfolio';
 import CryptoCurrencyPage from './components/CryptoCurrencyPage/CryptoCurrencyPage';
+import Exchanges from './components/Exchanges/Exchanges';
 
 function App() {
   let id = useParams();
@@ -16,7 +16,7 @@ function App() {
         <Routes>
           <Route path={'/'} element={<div />} />
           <Route path={'/crypto'} element={<CryptoCurrencies />} />
-          <Route path={'/portfolio'} element={<Portfolio />} />
+          <Route path={'/exchanges'} element={<Exchanges />} />
           <Route path={'/crypto/:id'} element={<CryptoCurrencyPage />} />
         </Routes>
       </BrowserRouter>

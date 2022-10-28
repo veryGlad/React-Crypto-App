@@ -1,8 +1,9 @@
 import React, { ChangeEvent } from 'react';
-import { useAppDispatch, useAppSelector } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../../store';
 import {
   Box,
   Container,
+  makeStyles,
   Pagination,
   Paper,
   Skeleton,
@@ -12,12 +13,13 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Theme,
 } from '@mui/material';
 import {
   fetchCryptoCurrencies,
   fetchGlobalCurrencyData,
   ICurrency,
-} from './cryptoCurrenciesSlice';
+} from '../cryptoCurrenciesSlice';
 import './currenciesTable.scss';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
@@ -28,24 +30,45 @@ import { styled } from '@mui/material/styles';
 const million = 1_000_000;
 const billion = 1_000_000_000;
 
+// const useStyles = makeStyles((theme: Theme) => ({
+//   root: {
+//     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+//     padding: theme.spacing(1),
+//     textAlign: 'center',
+//     color: theme.palette.text.primary,
+//     [theme.breakpoints.up('md')]: {
+//       backgroundColor: theme.palette.primary.main,
+//     },
+//   },
+// }));
+
 const CurrenciesTable = () => {
   const dispatch = useAppDispatch();
+  // const classes = useStyles();
 
   React.useEffect(() => {
-    dispatch(fetchCryptoCurrencies({ toCurrency: 'usd' }));
-    dispatch(fetchGlobalCurrencyData());
+    if (!currenciesLoading) {
+      dispatch(fetchCryptoCurrencies({ toCurrency: 'usd' }));
+    }
+    if (!globalCurrencyLoading) {
+      dispatch(fetchGlobalCurrencyData());
+    }
   }, [dispatch]);
 
-  const { fetchStatus, cryptoCurrencies, globalCurrencyData } = useAppSelector(
-    (state) => {
-      console.log(state.cryptoCurrenciesReducer.globalCurrencyData);
-      return {
-        cryptoCurrencies: state.cryptoCurrenciesReducer.data,
-        fetchStatus: state.cryptoCurrenciesReducer.loadingCryptocurrencies,
-        globalCurrencyData: state.cryptoCurrenciesReducer.globalCurrencyData,
-      };
-    }
-  );
+  const {
+    currenciesLoading,
+    cryptoCurrencies,
+    globalCurrencyData,
+    globalCurrencyLoading,
+  } = useAppSelector((state) => {
+    return {
+      cryptoCurrencies: state.cryptoCurrenciesReducer.data,
+      currenciesLoading: state.cryptoCurrenciesReducer.loadingCryptocurrencies,
+      globalCurrencyData: state.cryptoCurrenciesReducer.globalCurrencyData,
+      globalCurrencyLoading:
+        state.cryptoCurrenciesReducer.loadingGlobalCurrencyData,
+    };
+  });
 
   const getMarketCap = (marketCap: number): string => {
     if (marketCap / billion >= 1) {
@@ -72,7 +95,7 @@ const CurrenciesTable = () => {
     [dispatch]
   );
 
-  const Item = styled(Paper)(({ theme }) => ({
+  const StyledPaper = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
     padding: theme.spacing(1),
@@ -91,7 +114,7 @@ const CurrenciesTable = () => {
             width={'100%'}
             justifyContent={'center'}
           >
-            <Item>
+            <StyledPaper>
               <Box display={'flex'}>
                 <Typography color={'lightslategrey'}>
                   Crypto market capitalization
@@ -103,8 +126,8 @@ const CurrenciesTable = () => {
                   )}
                 </Typography>
               </Box>
-            </Item>
-            <Item>
+            </StyledPaper>
+            <StyledPaper>
               <Box display={'flex'}>
                 <Typography color={'lightslategrey'}>
                   Crypto market capitalization 24h change
@@ -125,8 +148,8 @@ const CurrenciesTable = () => {
                   %
                 </Typography>
               </Box>
-            </Item>
-            <Item>
+            </StyledPaper>
+            <StyledPaper>
               <Box display={'flex'}>
                 <Typography color={'lightslategrey'}>
                   Bitcoin domination
@@ -135,7 +158,7 @@ const CurrenciesTable = () => {
                   {globalCurrencyData?.market_cap_percentage.btc.toFixed(2)}%
                 </Typography>
               </Box>
-            </Item>
+            </StyledPaper>
           </Stack>
         </div>
       </Box>
@@ -153,7 +176,7 @@ const CurrenciesTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {fetchStatus
+              {currenciesLoading
                 ? new Array(100).fill('').map((item, index) => (
                     <TableRow
                       key={index}
